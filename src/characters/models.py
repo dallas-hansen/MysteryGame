@@ -26,3 +26,27 @@ class Clue(models.Model):
     
     def __str__(self):
         return f"Clue for {self.character.name}: {self.description}"
+
+class Interaction(models.Model):
+    initiator = models.ForeignKey(Character, related_name='interactions_initiated', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(Character, related_name='interactions_received', on_delete=models.CASCADE)
+    description = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.initiator.name} -> {self.receiver.name}: {self.description}"
+
+class Trait(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class Alibi(models.Model):
+    character = models.ForeignKey(Character, related_name='alibis', on_delete=models.CASCADE)
+    phase = models.IntegerField(help_text="Game phase this alibi pertains to.")
+    description = models.TextField()
+
+    def __str__(self):
+        return f"Alibi for {self.character.name} during phase {self.phase}: {self.description}"
